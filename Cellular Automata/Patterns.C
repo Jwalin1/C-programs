@@ -1,0 +1,110 @@
+#include<stdio.h>
+#include<conio.h>
+
+int main()
+{
+	int i,j,k,p,q,M[3][3],G[100][100],G1[100][100],c,s;
+	printf("Initial pattern matrix\n");
+	for(i=0;i<3;i++)
+	{
+		for(j=0;j<3;j++)
+		{
+			printf("[%d][%d] = ",i+1,j+1);
+			scanf("%d",&M[i][j]);
+		}
+	}
+	printf("\nenter size : ");
+	scanf("%d",&s);
+	c=s;
+	s=2*s+1;
+	for(i=c-1;i<=c+1;i++)
+	{
+		for(j=c-1;j<=c+1;j++)
+		{
+			G[i][j]=M[i-c+1][j-c+1];
+			G1[i][j]=M[i-c+1][j-c+1];
+		}
+	}
+	for(k=0;k<=c;k++)
+	{
+		for(i=c-2-k;i<=c+2+k;i++)
+		{
+			for(j=c-2-k;j<=c+2+k;j++)
+			{
+				if(i>=c-1-k&&i<=c+1+k&&j>=c-1-k&&j<=c+1+k)
+					continue;
+				if(i==c)
+				{
+					if(j<c)
+					{
+						if(G[i][j+1]==1)
+							G1[i][j]=1;
+					}
+					else
+					{
+						if(G[i][j-1]==1)
+							G1[i][j]=1;
+					}
+				}
+				else if(j==c)
+				{
+					if(i<c)
+					{
+						if(G[i+1][j]==1)
+							G1[i][j]=1;
+					}
+					else
+					{
+						if(G[i-1][j]==1)
+							G1[i][j]=1;
+					}
+				}
+				else
+				{
+					if(i<c)
+					{
+						if(j<c)
+						{
+							if((G[i+1][j+1]==1)&&(G[c][c]==1||i-j==0))
+								G1[i][j]=1;
+						}
+						else
+						{
+							if((G[i+1][j-1]==1)&&(G[c][c]==1||i+j==2*c))
+								G1[i][j]=1;
+						}
+					}
+					else
+					{
+						if(j<c)
+						{
+							if((G[i-1][j+1]==1)&&(G[c][c]==1||i+j==2*c))
+								G1[i][j]=1;
+						}
+						else
+						{
+							if((G[i-1][j-1]==1)&&(G[c][c]==1||i-j==0))
+								G1[i][j]=1;
+						}
+					}
+				}
+			}
+		}
+		for(i=0;i<s;i++)
+			for(j=0;j<s;j++)
+				G[i][j]=G1[i][j];
+	}
+	for(i=0;i<s;i++)
+	{
+		for(j=0;j<s;j++)
+		{
+			if(G[i][j]==1)
+				printf("*");
+			else
+				printf(" ");	
+		}
+		printf("\n");
+	}		
+	getch();
+	return 0;
+}
