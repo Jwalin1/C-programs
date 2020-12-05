@@ -27,7 +27,7 @@
 				b[j]=rand()%10;
 				a[j]=rand()%10;
 			}
-			// 1/10 the smallest number that satisfies the given responses will be chosen
+			// 1/10 times the smallest number that satisfies the given responses will be chosen
 			else
 			{
 				n=r;
