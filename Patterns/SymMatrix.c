@@ -2,7 +2,7 @@
 #include<graphics.h>
 
 
-void sort(int X[], int Y[], int n)
+void sort(int X[], int Y[], int n2, float Lp=2)
 {
 	int i,d1,d2,tmp;
 	bool swapped;
@@ -10,10 +10,10 @@ void sort(int X[], int Y[], int n)
 	do
 	{
 		swapped=false;
-		for(i=0; i<n*n-1; i++)
+		for(i=0; i<n2-1; i++)
 		{
-			d1 = X[i]*X[i] + Y[i]*Y[i];
-			d2 = X[i+1]*X[i+1] + Y[i+1]*Y[i+1];
+			d1 = pow(X[i],Lp) + pow(Y[i],Lp);
+			d2 = pow(X[i+1],Lp) + pow(Y[i+1],Lp);
 			
 			if ( (d1>d2) || ((d1==d2) && (X[i]>X[i+1])) )
 			{
@@ -79,7 +79,7 @@ int main()
 		step_size[i] = 0;
 	}
 	step_size[0] = 1;
-	sort(X,Y,n);
+	sort(X,Y,n2);
 	
 	detectgraph(&gd,&gm);
 	initgraph(&gd,&gm,NULL);
