@@ -12,8 +12,16 @@ void sort(int X[], int Y[], int n2, float Lp=2)
 		swapped=false;
 		for(i=0; i<n2-1; i++)
 		{
-			d1 = pow(X[i],Lp) + pow(Y[i],Lp);
-			d2 = pow(X[i+1],Lp) + pow(Y[i+1],Lp);
+			if(Lp<=4)
+			{
+				d1 = pow(X[i],Lp) + pow(Y[i],Lp);
+				d2 = pow(X[i+1],Lp) + pow(Y[i+1],Lp);
+			}
+			else
+			{
+				d1 = X[i] > Y[i] ? X[i] : Y[i];
+				d2 = X[i+1] > Y[i+1] ? X[i+1] : Y[i+1];
+			}
 			
 			if ( (d1>d2) || ((d1==d2) && (X[i]>X[i+1])) )
 			{
@@ -54,10 +62,18 @@ bool step(int pattern[], int n, int step_size[])
 int main()
 {
 	int i,j,n,n2,N;
-	float spd,p_complete,p_filled;
+	float spd,Lp,p_complete,p_filled;
 	
 	printf("enter the grid size : ");
 	scanf("%d",&N);
+	printf("\nLp norm\n");
+	printf("L(.66) norm : astroid\n");
+	printf("L(1) norm   : diamond\n");
+	printf("L(2) norm   : circle\n");
+	printf("L(4) norm   : squircle\n");
+	printf("L(inf) norm : square\n");
+	printf("\nenter value : ");
+	scanf("%f",&Lp);
 	n = ceil(N/2.0);
 	n2 = n*n;
 	spd = 0.5;
@@ -79,7 +95,7 @@ int main()
 		step_size[i] = 0;
 	}
 	step_size[0] = 1;
-	sort(X,Y,n2);
+	sort(X,Y,n2,Lp);
 	
 	detectgraph(&gd,&gm);
 	initgraph(&gd,&gm,NULL);
