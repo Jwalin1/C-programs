@@ -1,8 +1,22 @@
 #include<math.h>
 #include<graphics.h>
 
+float max (float x, float y) { return x > y ? x : y; }
+float min (float x, float y) { return x > y ? y : x; }
 
-void sort(int X[], int Y[], int n2, float Lp=2)
+// modify this func to get different patterns
+float dist(int x, int y)
+{ 
+	//return min(x,y);	// plus
+	//return max(x,y);	// square
+	//return x+y;	// rhombus
+	//return (x-y)*(y-x);	// cross
+	//return (x-y)*(x-y);	// traingles
+	//return max( x , max(fabs(x + sqrt(3)*y)/2, fabs(x - sqrt(3)*y)/2) );	// hexagon
+	return x*x + y*y;	// circle
+}
+
+void sort(int X[], int Y[], int n2)
 {
 	int i,d1,d2,tmp;
 	bool swapped;
@@ -12,18 +26,10 @@ void sort(int X[], int Y[], int n2, float Lp=2)
 		swapped=false;
 		for(i=0; i<n2-1; i++)
 		{
-			if(Lp<=4)
-			{
-				d1 = pow(X[i],Lp) + pow(Y[i],Lp);
-				d2 = pow(X[i+1],Lp) + pow(Y[i+1],Lp);
-			}
-			else
-			{
-				d1 = X[i] > Y[i] ? X[i] : Y[i];
-				d2 = X[i+1] > Y[i+1] ? X[i+1] : Y[i+1];
-			}
+			d1 = dist(X[i], Y[i]);
+			d2 = dist(X[i+1], Y[i+1]);
 			
-			if ( (d1>d2) || ((d1==d2) && (X[i]>X[i+1])) )
+			if (d1 < d2)	// reverse the inequality to get the inverse pattern
 			{
 				tmp = X[i];
 				X[i] = X[i+1];
@@ -62,23 +68,15 @@ bool step(int pattern[], int n, int step_size[])
 int main()
 {
 	int i,j,n,n2,N;
-	float spd,Lp,p_complete,p_filled;
+	float spd,p_complete,p_filled;
 	
 	printf("enter the grid size : ");
 	scanf("%d",&N);
-	printf("\nLp norm\n");
-	printf("L(.66) norm : astroid\n");
-	printf("L(1) norm   : diamond\n");
-	printf("L(2) norm   : circle\n");
-	printf("L(4) norm   : squircle\n");
-	printf("L(inf) norm : square\n");
-	printf("\nenter value : ");
-	scanf("%f",&Lp);
 	n = ceil(N/2.0);
 	n2 = n*n;
 	spd = 0.5;
 	
-	int gd,gm, bit=0, d=1, s=500/N;
+	int gd,gm, bit=0, step_dir=1, s=500/N;
 	int G_prev[n][n], G[n][n], X[n2], Y[n2], pattern[n2], step_size[n2];
 	char text[n2+100];
 	
@@ -95,7 +93,7 @@ int main()
 		step_size[i] = 0;
 	}
 	step_size[0] = 1;
-	sort(X,Y,n2,Lp);
+	sort(X,Y,n2);
 	
 	detectgraph(&gd,&gm);
 	initgraph(&gd,&gm,NULL);
@@ -192,7 +190,7 @@ int main()
 		}
 		else if (GetAsyncKeyState(VK_LEFT))
 		{
-			d=-1;
+			step_dir=-1;
 			for(i=0; i<n2; i++)
 				step_size[i] = step_size[i] == 1 ? -1 : step_size[i];
 			sprintf(text,"direction : dec");
@@ -200,7 +198,7 @@ int main()
 		}
 		else if (GetAsyncKeyState(VK_RIGHT))
 		{
-			d=1;
+			step_dir=1;
 			for(i=0; i<n2; i++)
 				step_size[i] = step_size[i] == -1 ? 1 : step_size[i];
 			sprintf(text,"direction : inc");
@@ -234,7 +232,7 @@ int main()
 		
 		if(spd > 1.0)
 		{
-			step_size[bit] = d;
+			step_size[bit] = step_dir;
 			if(!step(pattern,n2,step_size) && bit>0)
 			{
 				step_size[bit] = 0;
@@ -248,7 +246,7 @@ int main()
 			if (GetAsyncKeyState(VK_LEFT) || GetAsyncKeyState(VK_RIGHT))
 			{
 				for(i=0; i<n2; i++) { step_size[i] = 0; }
-				step_size[0] = d;
+				step_size[0] = step_dir;
 				step(pattern,n2,step_size);
 				Sleep(150);
 			}
@@ -256,7 +254,7 @@ int main()
 		else if(spd <= 1.0)
 		{
 			for(i=0; i<n2; i++) { step_size[i] = 0; }
-			step_size[0] = d;
+			step_size[0] = step_dir;
 			step(pattern,n2,step_size);
 			Sleep(-555.56*spd+555.56);
 		}		
