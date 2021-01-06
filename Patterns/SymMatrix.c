@@ -29,7 +29,7 @@ void sort(int X[], int Y[], int n2)
 			d1 = dist(X[i], Y[i]);
 			d2 = dist(X[i+1], Y[i+1]);
 			
-			if (d2 < d1)	// reverse the inequality to get the inverse pattern
+			if (d1 > d2)	// reverse the inequality to get the inverse pattern
 			{
 				tmp = X[i];
 				X[i] = X[i+1];
